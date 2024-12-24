@@ -31,6 +31,12 @@ You've got Erlang. You've got Go. You want them to be besties. We get it! This p
 2. Watch the magic happen:
 
     ```bash
+    # Add a Go module to your project (Standalone applications)
+    rebar3 go add -m <module_name>
+
+    # Add a Go module to your project (Release/Umbrella applications)
+    rebar3 go add -m <module_name> -a <app_name>
+
     # Compile go modules
     rebar3 go compile
 

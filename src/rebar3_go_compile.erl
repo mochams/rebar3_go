@@ -37,7 +37,7 @@ compile_modules(AppDir, GoDir, [Dir | Rest]) ->
             rebar_api:warn("No go.mod found in ~s, skipping", [ModPath])
     end;
 compile_modules(_AppDir, GoDir, []) ->
-    rebar_api:info("No Go modules found in ~s", [GoDir]),
+    rebar_api:info("Finished building go modules  in ~s", [GoDir]),
     ok.
 
 perform_go_build(AppDir, GoDir, Dir) ->
@@ -52,17 +52,8 @@ perform_go_build(AppDir, GoDir, Dir) ->
         ]
     ),
 
-    Opts = [
+    rebar3_go_utils:run_sh(BuildCmd, [
         {cd, AppDir},
         {return_on_error, true},
         use_stdout
-    ],
-
-    case rebar_utils:sh(BuildCmd, Opts) of
-        {ok, _Output} ->
-            rebar_api:info("Successfully compiled ~s", [ModPath]),
-            ok;
-        {error, {_Code, Output}} ->
-            rebar_api:error("Build failed for ~s:~n~s", [ModPath, Output]),
-            {error, {build_failed, ModPath, Output}}
-    end.
+    ]).
