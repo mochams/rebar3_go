@@ -18,7 +18,7 @@ You've got Erlang. You've got Go. You want them to be besties. We get it! This p
 
     ```erlang
     {plugins, [
-        {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {branch, "develop"}}}
+        {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}}
     ]}.
 
     {provider_hooks, [
