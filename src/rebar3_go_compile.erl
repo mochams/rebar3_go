@@ -9,7 +9,6 @@
 run(App) ->
     AppDir = rebar_app_info:dir(App),
     GoDir = rebar3_go_utils:path(AppDir, ?GO_SRC),
-    rebar_api:info("Checking Go source directory: ~s", [GoDir]),
 
     case rebar3_go_utils:check_go_installation() of
         ok ->
@@ -19,6 +18,8 @@ run(App) ->
     end.
 
 compile_modules(AppDir, GoDir) ->
+    rebar_api:info("Checking Go source directory: ~s", [GoDir]),
+
     case rebar3_go_utils:is_dir(GoDir) of
         ok ->
             Modules = rebar3_go_utils:get_go_modules(GoDir),
@@ -31,7 +32,7 @@ compile_modules(AppDir, GoDir, [Dir | Rest]) ->
     ModPath = rebar3_go_utils:path(GoDir, Dir),
     case rebar3_go_utils:path_has_file(ModPath, ?GO_MOD) of
         true ->
-            perform_go_build(AppDir, GoDir, Dir),
+            run_compile(AppDir, GoDir, Dir),
             compile_modules(AppDir, GoDir, Rest);
         false ->
             rebar_api:warn("No go.mod found in ~s, skipping", [ModPath])
@@ -40,7 +41,7 @@ compile_modules(_AppDir, GoDir, []) ->
     rebar_api:info("Finished building go modules  in ~s", [GoDir]),
     ok.
 
-perform_go_build(AppDir, GoDir, Dir) ->
+run_compile(AppDir, GoDir, Dir) ->
     ModPath = rebar3_go_utils:path(GoDir, Dir),
     PrivGoDir = rebar3_go_utils:path(AppDir, ?PRIV_GO),
 
