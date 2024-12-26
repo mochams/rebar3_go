@@ -18,9 +18,9 @@ A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 ## Installation
 
 ```erlang
-%% Add the following to your rebar.config
+%% Add the following to your rebar.config. Do NOT forget to replace the tag with the latest version.
 {plugins, [
-    {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}}
+    {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}} 
 ]}.
 
 %% Optional: Add the following to your rebar.config
@@ -47,9 +47,9 @@ rebar3 go compile
 rebar3 compile
 ```
 
-## Design
+## Directory Structure
 
-### Go Src Directory
+### Standalone App
 
 ```bash
 .
@@ -67,6 +67,44 @@ rebar3 compile
 │       ├── module1     # Compiled Go module 1
 │       └── module2     # Compiled Go module 2
 ```
+
+### Release/Umbrella App
+
+```bash
+.
+├── apps
+│   ├── app1                    # App 1
+│   │   ├── src                 # Erlang source code
+│   │   ├── go.work             # Go workspace definition
+│   │   ├── go_src              # Go source code
+│   │   │   ├── module1         # Go module 1
+│   │   │   │   ├── main.go
+│   │   │   │   └── go.mod
+│   │   │   └── module2         # Go module 2
+│   │   │       ├── main.go
+│   │   │       └── go.mod
+│   │   └── priv                # Priv directory
+│   │       └── go              # Compiled Go code
+│   │           ├── module1     # Compiled Go module 1
+│   │           └── module2     # Compiled Go module 2
+│   └── app2                    # App 2
+│       ├── src                 # Erlang source code
+│       ├── go.work             # Go workspace definition
+│       ├── go_src              # Go source code
+│       │   ├── module1         # Go module 1
+│       │   │   ├── main.go
+│       │   │   └── go.mod
+│       │   └── module2         # Go module 2
+│       │       ├── main.go
+│       │       └── go.mod
+│       └── priv                # Priv directory
+│           └── go              # Compiled Go code
+│               ├── module1     # Compiled Go module 1
+│               └── module2     # Compiled Go module 2
+└── rebar.config
+```
+
+## Commands
 
 ### Add Module Command
 
