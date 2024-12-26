@@ -9,22 +9,30 @@
 -define(GO_CONTENT, "package main\n\nfunc main() {\n\tprintln(\"Hello, World!\")\n}\n").
 
 run(Apps, State) ->
-    case length(Apps) of
-        ?NO_APPS -> rebar_api:abort("No apps found in the project", [?NO_APPS]);
-        ?SINGLE_APP -> match_handler(Apps, State);
-        _ -> umbrella_app_handler(Apps, State)
+    case rebar3_go_utils:check_go_installation() of
+        ok ->
+            add_module(Apps, State);
+        {error, Reason} ->
+            rebar_api:abort("Go installation check failed: ~p", [Reason])
     end.
 
-match_handler(Apps, State) ->
-    App = lists:nth(1, Apps),
-    case rebar3_go_utils:is_umbrella_project(rebar_app_info:dir(App)) of
-        true -> umbrella_app_handler(Apps, State);
-        false -> standalone_app_handler(App, State)
+add_module(Apps, State) ->
+    case length(Apps) of
+        ?NO_APPS ->
+            rebar_api:abort("No apps found in the project", [?NO_APPS]);
+        ?SINGLE_APP ->
+            App = lists:nth(1, Apps),
+            case rebar3_go_utils:is_umbrella_project(rebar_app_info:dir(App)) of
+                true -> umbrella_app_handler(Apps, State);
+                false -> standalone_app_handler(App, State)
+            end;
+        _ ->
+            umbrella_app_handler(Apps, State)
     end.
 
 standalone_app_handler(App, State) ->
     {Args, _} = rebar_state:command_parsed_args(State),
-    add_module(
+    run_add_module(
         App,
         rebar3_go_utils:get_arg_value(Args, module_name)
     ).
@@ -32,22 +40,16 @@ standalone_app_handler(App, State) ->
 umbrella_app_handler(Apps, State) ->
     {Args, _} = rebar_state:command_parsed_args(State),
 
-    AppList = [
-        {binary_to_list(rebar_app_info:name(App)), App}
-     || App <- Apps
-    ],
+    AppName = rebar3_go_utils:get_arg_value(Args, app_name),
 
-    case
-        rebar3_go_utils:find_app(
-            AppList,
-            rebar3_go_utils:get_arg_value(Args, app_name)
-        )
-    of
-        {ok, App} -> add_module(App, rebar3_go_utils:get_arg_value(Args, module_name));
+    AppList = [{binary_to_list(rebar_app_info:name(App)), App} || App <- Apps],
+
+    case rebar3_go_utils:find_app(AppList, AppName) of
+        {ok, App} -> run_add_module(App, rebar3_go_utils:get_arg_value(Args, module_name));
         {error, Reason} -> rebar_api:abort("App not found: ~p", [Reason])
     end.
 
-add_module(App, ModuleName) ->
+run_add_module(App, ModuleName) ->
     AppDir = rebar_app_info:dir(App),
     create_go_workspace(AppDir),
     create_module(AppDir, ModuleName),

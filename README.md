@@ -8,6 +8,9 @@ A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 
 - Adds Go modules to your Erlang/OTP project
 - Compiles Go modules in your project
+- Formats Go code in your project
+- Tests Go modules in your project (Coming soon)
+- Supports standalone and release/umbrella applications
 - Minimal configuration required
 
 ## Requirements
@@ -43,8 +46,8 @@ rebar3 go add -m <module_name> -a <app_name>
 # To compile go modules
 rebar3 go compile
 
-# To compile erlang and go modules
-rebar3 compile
+# To format go code
+rebar3 go fmt
 ```
 
 ## Directory Structure
@@ -151,8 +154,8 @@ rebar3 compile
 
 - [x] Add module command
 - [x] Compile command
+- [x] Format command
 - [ ] Test module command
-- [ ] Format command
 
 ## Contributing
 
