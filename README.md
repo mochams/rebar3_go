@@ -1,71 +1,127 @@
 # rebar3_go 🚀
 
-Because your Erlang needs some Go-Go juice! A rebar3 plugin that manages Go ports like a boss.
+A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 
-## What's This Magic?
-
-You've got Erlang. You've got Go. You want them to be besties. We get it! This plugin makes your Go ports play nice with your Erlang/OTP application. No manual compilation, no path juggling, just pure inter-language harmony.
+[![License](https://img.shields.io/github/license/mochams/rebar3_go)](https://github.com/mochams/rebar3_go)
 
 ## Features
 
-- Automatically compiles Go ports to the correct location
-- Handles multiple Go modules
+- Adds Go modules to your Erlang/OTP project
+- Compiles Go modules in your project
 - Minimal configuration required
-
-## Quick Start
-
-1. Add to your `rebar.config`:
-
-    ```erlang
-    {plugins, [
-        {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}}
-    ]}.
-
-    {provider_hooks, [
-        {pre, [
-            {compile, {go, compile}}
-        ]}
-    ]}.
-    ```
-
-2. Watch the magic happen:
-
-    ```bash
-    # Add a Go module to your project (Standalone applications)
-    rebar3 go add -m <module_name>
-
-    # Add a Go module to your project (Release/Umbrella applications)
-    rebar3 go add -m <module_name> -a <app_name>
-
-    # Compile go modules
-    rebar3 go compile
-
-    # Compile erlang and go modules
-    rebar3 compile
-    ```
-
-## But How?
-
-1. Your Go code resides in `go_src/`
-2. We compile it to `priv/go/` with help of `go workspaces`
-3. Your Erlang code talks to it via ports ([erlgo](https://github.com/mochams/erlgo))
-4. Everyone's happy!
 
 ## Requirements
 
 - Erlang/OTP
 - Go
 
+## Installation
+
+```erlang
+%% Add the following to your rebar.config
+{plugins, [
+    {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}}
+]}.
+
+%% Optional: Add the following to your rebar.config
+{provider_hooks, [
+    {pre, [
+        {compile, {go, compile}}
+    ]}
+]}.
+```
+
+## Usage
+
+```bash
+# To add a Go module to your project (Standalone applications)
+rebar3 go add -m <module_name>
+
+# To add a Go module to your project (Release/Umbrella applications)
+rebar3 go add -m <module_name> -a <app_name>
+
+# To compile go modules
+rebar3 go compile
+
+# To compile erlang and go modules
+rebar3 compile
+```
+
+## Design
+
+### Go Src Directory
+
+```bash
+.
+├── src                 # Erlang source code    
+├── go.work             # Go workspace definition
+├── go_src              # Go source code
+│   ├── module1         # Go module 1
+│   │   ├── main.go
+│   │   └── go.mod
+│   └── module2         # Go module 2
+│       ├── main.go
+│       └── go.mod
+├── priv                # Priv directory
+│   └── go              # Compiled Go code
+│       ├── module1     # Compiled Go module 1
+│       └── module2     # Compiled Go module 2
+```
+
+### Add Module Command
+
+0. The plugin adds a Go module to the project.
+
+    `Syntax(Standalone app)`
+
+    ```bash
+    rebar3 go add -m <module_name>
+    ```
+
+    `Syntax(Release/Umbrella app)`
+
+    ```bash
+    rebar3 go add -m <module_name> -a <app_name>
+    ```
+
+1. First time adding a Go module to your project, the plugin creates a `go.work` file in the app root directory.
+
+    > In standalone applications, the `go.work` file will be created in the root directory of the application.  
+    > In release/umbrella applications, the `go.work` file will be created in the root directory of the specified app.
+
+2. The plugin creates a `go_src/<module_name>` directory and creates the `main.go` and `go.mod` files in it.
+
+3. The plugin adds the module name to the `go.work` file.
+
+### Compile Command
+
+0. The plugin compiles the Go modules in the project.
+
+    `Syntax`
+
+    ```bash
+    rebar3 go compile
+    ```
+
+1. The plugins goes through all applications in the project and checks if they have a `go_src` directory.
+
+2. If a `go_src` directory is found, the plugin compiles the Go module(s) in the directory else it skips the application.
+
+3. The plugin compiles the Go module(s) and copies the compiled code to the `priv/go` directory.
+
+## Roadmap
+
+- [x] Add module command
+- [x] Compile command
+- [ ] Test module command
+- [ ] Format command
+
 ## Contributing
 
-Found a bug? Want to add something cool? PRs are welcome!
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Acknowledgments
 
-- The creators of Erlang and Rebar3
-- The Go team
-- You, for reading this far! 🌟
-
-Remember: In a world of microservices, we chose port communication. We're either brave or crazy. Probably both.
+Inspired by the needs of the Erlang/OTP community for reliable Go port communication. See also [erlgo](https://github.com/mochams/erlgo)
 
 Now go forth and make your Erlang and Go code talk to each other like old friends! 🚀✨
