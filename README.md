@@ -9,7 +9,7 @@ A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 - Adds Go modules to your Erlang/OTP project
 - Compiles Go modules in your project
 - Formats Go code in your project
-- Tests Go modules in your project (Coming soon)
+- Tests Go modules in your project
 - Supports standalone and release/umbrella applications
 - Minimal configuration required
 
@@ -21,7 +21,8 @@ A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 ## Installation
 
 ```erlang
-%% Add the following to your rebar.config. Do NOT forget to replace the tag with the latest version.
+%% Add the following to your rebar.config. 
+%% Do NOT forget to replace the tag with the latest version.
 {plugins, [
     {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}} 
 ]}.
@@ -48,6 +49,9 @@ rebar3 go compile
 
 # To format go code
 rebar3 go fmt
+
+# To test go modules
+rebar3 go test
 ```
 
 ## Directory Structure
@@ -150,12 +154,38 @@ rebar3 go fmt
 
 3. The plugin compiles the Go module(s) and copies the compiled code to the `priv/go` directory.
 
+### Format Command
+
+0. The plugin formats the Go code in the project.
+
+    `Syntax`
+
+    ```bash
+    rebar3 go fmt
+    ```
+
+1. The plugin runs the command `go fmt ./...` in each go module.
+
+### Test Command
+
+0. The plugin tests the Go modules in the project.
+
+    `Syntax`
+
+    ```bash
+    rebar3 go test
+    ```
+
+1. The plugin runs the command `go test ./... -cover` in each go module.
+
+2. The plugin aborts the whole operation if any of the tests fail.
+
 ## Roadmap
 
 - [x] Add module command
 - [x] Compile command
 - [x] Format command
-- [ ] Test module command
+- [x] Test module command
 
 ## Contributing
 
@@ -163,6 +193,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Acknowledgments
 
-Inspired by the needs of the Erlang/OTP community for reliable Go port communication. See also [erlgo](https://github.com/mochams/erlgo)
+Inspired by the needs of the Erlang/OTP community for reliable Go port communication.
+
+## Complementary Libraries
+
+- [Erlgo](https://github.com/mochams/erlgo): Send and Receive messages between Erlang and Go.
 
 Now go forth and make your Erlang and Go code talk to each other like old friends! 🚀✨
