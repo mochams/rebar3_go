@@ -18,3 +18,5 @@ logs
 *.iml
 rebar3.crashdump
 *~
+# Where third-party dependencies like ExDoc output generated docs.
+/doc/
