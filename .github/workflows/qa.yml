@@ -22,6 +22,11 @@ jobs:
           otp-version: ${{matrix.otp}}
           rebar3-version: ${{matrix.rebar}}
 
+      - name: Run Lint
+        env:
+          ERL_FLAGS: "-enable-feature all"
+        run: rebar3 fmt --check
+
       - name: Run Tests
         env:
           ERL_FLAGS: "-enable-feature all"

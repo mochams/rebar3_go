@@ -23,7 +23,7 @@ A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 ```erlang
 %% Add the following to your rebar.config. 
 %% Do NOT forget to replace the tag with the latest version.
-{plugins, [
+{project_plugins, [
     {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}} 
 ]}.
 
