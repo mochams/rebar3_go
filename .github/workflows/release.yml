@@ -1,0 +1,26 @@
+name: Release It
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  hex-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v4
+
+      - name: Replace Version with Tag
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          VERSION=${RELEASE_TAG#v}  # Remove leading "v" if present
+          sed -i "s/{vsn, \".*\"}/{vsn, \"$VERSION\"}/" src/*.app.src
+
+      - name: Publish to Hex.pm
+        uses: erlangpack/github-action@v3
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_TOKEN }}

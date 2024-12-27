@@ -1,5 +1,5 @@
 {application, rebar3_go, [
-    {description, "A rebar plugin to build go modules"},
+    {description, "A rebar plugin to manage go modules"},
     {vsn, "0.1.0"},
     {registered, []},
     {applications, [
