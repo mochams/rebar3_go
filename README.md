@@ -1,8 +1,12 @@
 # rebar3_go 🚀
 
-A rebar3 plugin for managing Go modules in Erlang/OTP applications.
-
+[![Erlang/OTP Versions](https://img.shields.io/badge/erlang%2Fotp-27-blue)](http://www.erlang.org)
+[![Hex Version](https://img.shields.io/hexpm/v/rebar3_go
+)](https://hex.pm/packages/rebar3_go)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/rebar3_go/)
 [![License](https://img.shields.io/github/license/mochams/rebar3_go)](https://github.com/mochams/rebar3_go)
+
+A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 
 ## Features
 
@@ -22,10 +26,7 @@ A rebar3 plugin for managing Go modules in Erlang/OTP applications.
 
 ```erlang
 %% Add the following to your rebar.config. 
-%% Do NOT forget to replace the tag with the latest version.
-{project_plugins, [
-    {rebar3_go, {git, "https://github.com/mochams/rebar3_go", {tag, "v0.1.0"}}} 
-]}.
+{project_plugins, [rebar3_go]}.
 
 %% Optional: Add the following to your rebar.config
 {provider_hooks, [
