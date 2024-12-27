@@ -74,8 +74,7 @@ get_arg_value(Args, ArgName) ->
 
 run_sh(BuildCmd, Opts) ->
     case rebar_utils:sh(BuildCmd, Opts) of
-        {ok, Output} ->
-            rebar_api:info("Successful action ~s", [Output]),
+        {ok, _Output} ->
             ok;
         {error, {_Code, Output}} ->
             rebar_api:error("Action failed:~n~s", [Output]),
